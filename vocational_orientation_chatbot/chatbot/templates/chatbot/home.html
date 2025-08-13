@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Chatbot Vocacional</title>
+    <style>
+        body { font-family: Arial; margin: 20px; max-width: 600px; }
+        #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+        .user { color: blue; text-align: right; }
+        .bot { color: green; text-align: left; }
+    </style>
+</head>
+<body>
+    <h2>Chatbot de Orientación Vocacional</h2>
+    <div id="chat"></div>
+    <input type="text" id="msg" placeholder="Escribí tu consulta o poné 'empezar test'">
+    <button onclick="sendMessage()">Enviar</button>
+
+    <script>
+        function append(role, text) {
+            const chat = document.getElementById('chat');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = role;
+            msgDiv.innerText = text;
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function sendMessage() {
+            const text = document.getElementById('msg').value;
+            if (!text) return;
+            append('user', text);
+            document.getElementById('msg').value = '';
+
+            fetch('/ask/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new URLSearchParams({ 'message': text })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.reply) append('bot', data.reply);
+                else append('bot', 'Error: ' + data.error);
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
