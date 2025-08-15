@@ -8,10 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import ollama
 
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-
 
 load_dotenv()
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 
 # Estado temporal del test
 test_questions = [
