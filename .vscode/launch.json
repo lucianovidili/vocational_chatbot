@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Django Server",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/vocational_orientation_chatbot/manage.py",
+        "args": ["runserver", "0.0.0.0:8000"],
+        "django": true
+      }
+    ]
+  }
